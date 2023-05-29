@@ -1,0 +1,63 @@
+body, button {
+    margin: 0;
+    background-color: #111111;
+    outline: none;
+    border: 0px;
+    font-family: "Roboto", sans-serif;
+    color: #F5F5F5;
+}
+
+.header {
+    text-align: center;
+    letter-spacing: 10px;
+    font-size: 67px;
+    font-weight: 100;
+    padding: 2% 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.20);
+}
+
+.status {
+    font-size: 30px;
+    font-weight: 300;
+    letter-spacing: 10px;
+}
+
+.actions, .board, .status {
+    display: flex;
+    justify-content: center;
+}
+
+.actions, .status {
+    margin: 2% 0;
+}
+
+button.reset {
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 25px;
+}
+
+button.square[value="win-1"], button.reset[value="◯"]:hover {
+    background-color: rgb(10, 70, 60);
+}
+
+button.square[value="win1"], button.reset[value="╳"]:hover {
+    background-color: rgb(140, 45, 35);
+}
+
+button.square {
+    box-shadow: 0 2px 10px 0 rgba(255, 255, 255, 0.10);
+    font-size: 50px;
+    color: #808080;
+    height: 100px;
+    width: 100px;
+    margin: 15px;
+}
+
+button.square:enabled {
+    box-shadow: 0 2px 5px 0 rgba(255, 255, 255, 0.1), 0 2px 10px 0 rgba(255, 255, 255, 0.2);
+}
+
+button.square:hover:enabled {
+    box-shadow: 0 8px 17px 0 rgba(255, 255, 255, 0.3), 0 6px 20px 0 rgba(255, 255, 255, 0.4);
+}
