@@ -13,7 +13,9 @@ function Board() {
     return (
         [1, 2, 3].map((i) =>
             <div className="board" key={i}>
-                <Square />
+                {
+                    [3, 6, 9].map((j) => <Square key={i + j} />)
+                }
             </div>
         )
     )
