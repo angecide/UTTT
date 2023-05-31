@@ -16,33 +16,9 @@ body, button {
     border-bottom: 1px solid rgba(255, 255, 255, 0.20);
 }
 
-.status {
-    font-size: 30px;
-    font-weight: 300;
-    letter-spacing: 10px;
-}
-
-.actions, .board, .status {
+.TTT {
     display: flex;
     justify-content: center;
-}
-
-.actions, .status {
-    margin: 2% 0;
-}
-
-button.reset {
-    font-size: 20px;
-    cursor: pointer;
-    margin: 0 25px;
-}
-
-button.square[value="win-1"], button.reset[value="◯"]:hover {
-    background-color: rgb(10, 70, 60);
-}
-
-button.square[value="win1"], button.reset[value="╳"]:hover {
-    background-color: rgb(140, 45, 35);
 }
 
 button.square {
