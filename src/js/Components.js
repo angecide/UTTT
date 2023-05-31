@@ -9,31 +9,48 @@ function Square() {
     )
 }
 
-function TTT() {
+function MiniBoard() {
     return (
-        [1, 2, 3].map((i) =>
-            <div className="TTT" key={i}>
-                {
-                    [3, 6, 9].map((j) => <Square key={i + j} />)
-                }
-            </div>
-        )
+        <div>
+            {
+                [1, 2, 3].map((i) =>
+                    <div className='minirow' key={i}>
+                        <Square />
+                        <Square />
+                        <Square />
+                    </div>
+                )
+            }
+        </div>
     )
 }
 
-function UTTT() {
+function Row() {
     return (
-        <div>
-            <TTT />
+        <div className='row'>
+            <MiniBoard />
+            <MiniBoard />
+            <MiniBoard />
         </div>
+
+    )
+}
+
+function Board() {
+    return (
+        <>
+            <Row />
+            <Row />
+            <Row />
+        </>
     )
 }
 
 export function Main() {
     return (
         <>
-            <div className="header">{"Ultimate Tic Tac Toe"}</div>
-            <TTT />
+            <div id="header">{"Ultimate Tic Tac Toe"}</div>
+            <Board />
         </>
     )
 }
