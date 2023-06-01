@@ -15,17 +15,27 @@ body {
     letter-spacing: 10px;
     font-size: 67px;
     font-weight: 100;
-    padding: 2% 0;
+    padding: 2%;
     border-bottom: 1px solid rgba(255, 255, 255, 0.20);
+    margin-bottom: 1%;
 }
 
 .minirow {
     display: flex;
 }
 
-.row {
+.upperrow, .middlerow, .lowerrow {
     display: flex;
     flex-direction: row;
+}
+
+.upperrow, .middlerow {
+    border-bottom: 5px solid rgba(255, 255, 255, 0.30);
+}
+
+.middleboard {
+    border-left: 5px solid rgba(255, 255, 255, 0.30);
+    border-right: 5px solid rgba(255, 255, 255, 0.30);
 }
 
 button {
@@ -38,9 +48,9 @@ button.square {
     box-shadow: 0 2px 10px 0 rgba(255, 255, 255, 0.10);
     font-size: 30px;
     color: #808080;
-    height: 80px;
-    width: 80px;
-    margin: 10px;
+    height: 55px;
+    width: 55px;
+    margin: 8px;
 }
 
 button.square:enabled {

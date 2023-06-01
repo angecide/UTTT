@@ -9,9 +9,9 @@ function Square() {
     )
 }
 
-function MiniBoard() {
+function MiniBoard(props) {
     return (
-        <div>
+        <div className={props.name}>
             {
                 [1, 2, 3].map((i) =>
                     <div className='minirow' key={i}>
@@ -25,32 +25,22 @@ function MiniBoard() {
     )
 }
 
-function Row() {
+function Row(props) {
     return (
-        <div className='row'>
-            <MiniBoard />
-            <MiniBoard />
-            <MiniBoard />
+        <div className={props.name}>
+            <MiniBoard name={"leftboard"} />
+            <MiniBoard name={"middleboard"} />
+            <MiniBoard name={"rightboard"} />
         </div>
-
     )
 }
 
-function Board() {
+export function Board() {
     return (
         <>
-            <Row />
-            <Row />
-            <Row />
-        </>
-    )
-}
-
-export function Main() {
-    return (
-        <>
-            <div id="header">{"Ultimate Tic Tac Toe"}</div>
-            <Board />
+            <Row name={"upperrow"}/>
+            <Row name={"middlerow"}/>
+            <Row name={"lowerrow"}/>
         </>
     )
 }
