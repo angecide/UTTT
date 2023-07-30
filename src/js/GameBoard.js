@@ -10,7 +10,7 @@ function Square(props) {
     }
     return (
         <button
-            className='square'
+            className="square"
             onClick={() => update()}
         >
             {board_array[props.idx]}
@@ -23,7 +23,7 @@ function MiniBoard(props) {
         <div className={props.name}>
             {
                 [0, 3, 6].map((i) =>
-                    <div className='minirow' key={i}>
+                    <div className="minirow" key={i}>
                         <Square idx={i + props.board_idx} />
                         <Square idx={i + 1 + props.board_idx} />
                         <Square idx={i + 2 + props.board_idx} />
