@@ -2,10 +2,10 @@ import { useState } from 'react'
 
 let board_array = Array(81).fill("")
 
-function Square(props) {
+function Square({idx}) {
     const [state, setState] = useState(true)
     const update = () => {
-        board_array[props.idx] = state ? "╳" : "◯"
+        board_array[idx] = state ? "╳" : "◯"
         setState(!state)
     }
     return (
@@ -13,20 +13,20 @@ function Square(props) {
             className="square"
             onClick={() => update()}
         >
-            {board_array[props.idx]}
+            {board_array[idx]}
         </button>
     )
 }
 
-function MiniBoard(props) {
+function MiniBoard({name, board_idx}) {
     return (
-        <div className={props.name}>
+        <div className={name}>
             {
                 [0, 3, 6].map((i) =>
                     <div className="minirow" key={i}>
-                        <Square idx={i + props.board_idx} />
-                        <Square idx={i + 1 + props.board_idx} />
-                        <Square idx={i + 2 + props.board_idx} />
+                        <Square idx={i + board_idx} />
+                        <Square idx={i + 1 + board_idx} />
+                        <Square idx={i + 2 + board_idx} />
                     </div>
                 )
             }
@@ -34,12 +34,12 @@ function MiniBoard(props) {
     )
 }
 
-function Row(props) {
+function Row({name, row_idx}) {
     return (
-        <div className={props.name}>
-            <MiniBoard name={"leftboard"} board_idx={0 + props.row_idx} />
-            <MiniBoard name={"middleboard"} board_idx={9 + props.row_idx} />
-            <MiniBoard name={"rightboard"} board_idx={18 + props.row_idx} />
+        <div className={name}>
+            <MiniBoard name={"leftboard"} board_idx={0 + row_idx} />
+            <MiniBoard name={"middleboard"} board_idx={9 + row_idx} />
+            <MiniBoard name={"rightboard"} board_idx={18 + row_idx} />
         </div>
     )
 }
