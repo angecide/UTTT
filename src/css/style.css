@@ -19,25 +19,25 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.20);
 }
 
-.resetbuttons {
+.reset-buttons {
     display: flex;
     margin: 1% 0 1% 0;
 }
 
-.minirow {
+.mini-row {
     display: flex;
 }
 
-.upperrow, .middlerow, .lowerrow {
+.upper-row, .middle-row, .lower-row {
     display: flex;
     flex-direction: row;
 }
 
-.upperrow, .middlerow {
+.upper-row, .middle-row {
     border-bottom: 5px solid rgba(255, 255, 255, 0.30);
 }
 
-.middleboard {
+.middle-board {
     border-left: 5px solid rgba(255, 255, 255, 0.30);
     border-right: 5px solid rgba(255, 255, 255, 0.30);
 }
