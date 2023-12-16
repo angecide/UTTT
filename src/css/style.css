@@ -12,16 +12,16 @@ body {
 }
 
 #header {
-    letter-spacing: 10px;
+    letter-spacing: 20px;
     font-size: 67px;
     font-weight: 100;
-    padding: 0% 2% 1% 2%;
+    padding: 1% 0 2% 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.20);
-    margin-bottom: 1%;
 }
 
 .resetbuttons {
     display: flex;
+    margin: 1% 0 1% 0;
 }
 
 .minirow {
@@ -43,11 +43,9 @@ body {
 }
 
 button.reset {
-    color: #808080;
+    color: #F5F5F5;
     font-size: 30px;
-    height: 55px;
-    width: 200px;
-    margin: 0% 2% 4% 2%;
+    margin: 0 25px;
 }
 
 button.reset[value="╳"]:hover {

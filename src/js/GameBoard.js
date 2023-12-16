@@ -17,15 +17,15 @@ function Square({ idx, board_array }) {
     )
 }
 
-function MiniBoard({ name, board_idx, ...rest }) {
+function MiniBoard({ name, board_idx, ...board_array }) {
     return (
         <div className={name}>
             {
                 [0, 3, 6].map((i) =>
                     <div className="minirow" key={i}>
-                        <Square idx={i + board_idx} {...rest} />
-                        <Square idx={i + 1 + board_idx} {...rest} />
-                        <Square idx={i + 2 + board_idx} {...rest} />
+                        <Square idx={i + board_idx} {...board_array} />
+                        <Square idx={i + 1 + board_idx} {...board_array} />
+                        <Square idx={i + 2 + board_idx} {...board_array} />
                     </div>
                 )
             }
@@ -33,12 +33,12 @@ function MiniBoard({ name, board_idx, ...rest }) {
     )
 }
 
-function Row({ name, row_idx, ...rest }) {
+function Row({ name, row_idx, ...board_array }) {
     return (
         <div className={name}>
-            <MiniBoard name={"leftboard"} board_idx={0 + row_idx} {...rest} />
-            <MiniBoard name={"middleboard"} board_idx={9 + row_idx} {...rest} />
-            <MiniBoard name={"rightboard"} board_idx={18 + row_idx} {...rest} />
+            <MiniBoard name={"leftboard"} board_idx={0 + row_idx} {...board_array} />
+            <MiniBoard name={"middleboard"} board_idx={9 + row_idx} {...board_array} />
+            <MiniBoard name={"rightboard"} board_idx={18 + row_idx} {...board_array} />
         </div>
     )
 }
