@@ -12,17 +12,19 @@ function Square({idx, board_array}) {
     </button>
 }
 
-function MiniBoard({name, board_idx, ...board_array}) {
+function MiniRow({row_idx, board_idx, ...board_array}) {
+    return <div className={"mini-row"}>
+        <Square idx={row_idx + board_idx} {...board_array} />
+        <Square idx={row_idx + 1 + board_idx} {...board_array} />
+        <Square idx={row_idx + 2 + board_idx} {...board_array} />
+    </div>
+}
+
+function MiniBoard({name, ...props}) {
     return <div className={name}>
-        {
-            [0, 3, 6].map((i) =>
-                <div className={"mini-row"} key={i}>
-                    <Square idx={i + board_idx} {...board_array} />
-                    <Square idx={i + 1 + board_idx} {...board_array} />
-                    <Square idx={i + 2 + board_idx} {...board_array} />
-                </div>
-            )
-        }
+        <MiniRow row_idx={0} {...props} />
+        <MiniRow row_idx={3} {...props} />
+        <MiniRow row_idx={6} {...props} />
     </div>
 }
 
