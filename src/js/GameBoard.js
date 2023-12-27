@@ -6,11 +6,9 @@ export function Board() {
 
     function Square({idx}) {
         const [state, updateState] = useState(true)
-        console.log(idx)
         const update_square = () => {
             board_array[idx] = state ? "╳" : "◯"
             updateState(!state)
-            console.log(String(idx) + " rendered: " + String(state))
         }
         return <button className="square" onClick={() => update_square()}>
             {board_array[idx]}
