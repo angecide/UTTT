@@ -28,10 +28,9 @@ function Reset({set_board_array}) {
     </button>
 }
 
-export const ResetButtons = ({set_board_array}) => useMemo(() => {
-    return <div className="reset-buttons">
+export const ResetButtons = ({set_board_array}) => useMemo(() =>
+    <div className="reset-buttons">
         <PlayerX set_board_array={set_board_array}/>
         <PlayerO set_board_array={set_board_array}/>
         <Reset set_board_array={set_board_array}/>
-    </div>
-}, [set_board_array]);
+    </div>, [set_board_array]);
