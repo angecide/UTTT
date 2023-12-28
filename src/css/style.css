@@ -63,7 +63,7 @@ button.reset[value="reset"]:hover {
 button {
     background-color: #111;
     outline: none;
-    border: 0px;
+    border: 0;
 }
 
 button.square {
