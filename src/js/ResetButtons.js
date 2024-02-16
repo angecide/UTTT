@@ -1,35 +1,38 @@
 import {useMemo} from "react";
 
-const reset_board = (set_board_array) => {
+const reset_and_set_turn = (set_board_array, set_turn, turn) => {
     set_board_array(Array(81).fill(""))
+    set_turn(turn)
 }
-
-function PlayerX({set_board_array}) {
+// there is some duplicated code here, for playerX, Y and even reset
+// just put it all under the same function and refactor from that
+function PlayerX({set_board_array, set_turn}) {
     return <button className="reset"
                    value={"╳"}
-                   onClick={() => reset_board(set_board_array)}>
+                   onClick={() => reset_and_set_turn(set_board_array, set_turn, 1)}>
         {"╳"}
     </button>
 }
 
-function PlayerO({set_board_array}) {
+function PlayerO({set_board_array, set_turn}) {
     return <button className="reset"
                    value={"◯"}
-                   onClick={() => reset_board(set_board_array)}>
+                   onClick={() => reset_and_set_turn(set_board_array, set_turn, -1)}>
         {"◯"}
     </button>
 }
 
-function Reset({set_board_array}) {
+function Reset({set_board_array, set_turn}) {
     return <button className="reset"
                    value={"reset"}
-                   onClick={() => reset_board(set_board_array)}>
+                   onClick={() => reset_and_set_turn(set_board_array, set_turn, 0)}>
         {"reset"}
     </button>
 }
 
-export const ResetButtons = ({set_board_array}) => useMemo(() => <div className="reset-buttons">
-    <PlayerX set_board_array={set_board_array}/>
-    <PlayerO set_board_array={set_board_array}/>
-    <Reset set_board_array={set_board_array}/>
-</div>, [set_board_array]);
+export const ResetButtons = ({set_board_array, set_turn}) => useMemo(() =>
+    <div className="reset-buttons">
+        <PlayerX set_board_array={set_board_array} set_turn={set_turn}/>
+        <PlayerO set_board_array={set_board_array} set_turn={set_turn}/>
+        <Reset set_board_array={set_board_array} set_turn={set_turn}/>
+    </div>, [set_board_array, set_turn]);
