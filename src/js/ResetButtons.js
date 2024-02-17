@@ -8,17 +8,17 @@ const reset_and_set_turn = (set_board_array, set_turn, turn) => {
 // just put it all under the same function and refactor from that
 function PlayerX({set_board_array, set_turn}) {
     return <button className="reset"
-                   value={"╳"}
+                   value={"✕"}
                    onClick={() => reset_and_set_turn(set_board_array, set_turn, 1)}>
-        {"╳"}
+        {"✕"}
     </button>
 }
 
 function PlayerO({set_board_array, set_turn}) {
     return <button className="reset"
-                   value={"◯"}
+                   value={"〇"}
                    onClick={() => reset_and_set_turn(set_board_array, set_turn, -1)}>
-        {"◯"}
+        {"〇"}
     </button>
 }
 
@@ -30,6 +30,7 @@ function Reset({set_board_array, set_turn}) {
     </button>
 }
 
+// The difference memo makes here is that each individual reset button doesn't get re-rendered, but the div still does
 export const ResetButtons = ({set_board_array, set_turn}) => useMemo(() =>
     <div className="reset-buttons">
         <PlayerX set_board_array={set_board_array} set_turn={set_turn}/>
