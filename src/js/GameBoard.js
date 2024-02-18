@@ -17,7 +17,7 @@ export function Board() {
             current_turn = -current_turn
         }
 
-        return <button className="square" onClick={() => update_square()}>
+        return <button className="square" onClick={update_square}>
             {state}
         </button>
     }

@@ -1,39 +1,21 @@
-import {useMemo} from "react";
+export function ResetButtons({set_board_array, set_turn}) {
 
-const reset_and_set_turn = (set_board_array, set_turn, turn) => {
-    set_board_array(Array(81).fill(""))
-    set_turn(turn)
-}
-// there is some duplicated code here, for playerX, Y and even reset
-// just put it all under the same function and refactor from that
-function PlayerX({set_board_array, set_turn}) {
-    return <button className="reset"
-                   value={"✕"}
-                   onClick={() => reset_and_set_turn(set_board_array, set_turn, 1)}>
-        {"✕"}
-    </button>
-}
+    const reset_and_set_turn = (turn) => {
+        set_board_array(Array(81).fill(""))
+        set_turn(turn)
+    }
 
-function PlayerO({set_board_array, set_turn}) {
-    return <button className="reset"
-                   value={"〇"}
-                   onClick={() => reset_and_set_turn(set_board_array, set_turn, -1)}>
-        {"〇"}
-    </button>
-}
+    function ResetButton({text, turn}) {
+        return <button className="reset"
+                       value={text}
+                       onClick={() => reset_and_set_turn(turn)}>
+            {text}
+        </button>
+    }
 
-function Reset({set_board_array, set_turn}) {
-    return <button className="reset"
-                   value={"reset"}
-                   onClick={() => reset_and_set_turn(set_board_array, set_turn, 0)}>
-        {"reset"}
-    </button>
+    return <div className="reset-buttons">
+        <ResetButton text={"✕"} turn={1}/>
+        <ResetButton text={"〇"} turn={-1}/>
+        <ResetButton text={"reset"} turn={0}/>
+    </div>
 }
-
-// The difference memo makes here is that each individual reset button doesn't get re-rendered, but the div still does
-export const ResetButtons = ({set_board_array, set_turn}) => useMemo(() =>
-    <div className="reset-buttons">
-        <PlayerX set_board_array={set_board_array} set_turn={set_turn}/>
-        <PlayerO set_board_array={set_board_array} set_turn={set_turn}/>
-        <Reset set_board_array={set_board_array} set_turn={set_turn}/>
-    </div>, [set_board_array, set_turn]);
