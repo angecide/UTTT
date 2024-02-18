@@ -1,14 +1,15 @@
 export function ResetButtons({set_board_array, set_turn}) {
 
-    const reset_and_set_turn = (turn) => {
-        set_board_array(Array(81).fill(""))
-        set_turn(turn)
-    }
-
     function ResetButton({text, turn}) {
+
+        const reset_and_set_turn = () => {
+            set_board_array(Array(81).fill(""))
+            set_turn(turn)
+        }
+
         return <button className="reset"
                        value={text}
-                       onClick={() => reset_and_set_turn(turn)}>
+                       onClick={reset_and_set_turn}>
             {text}
         </button>
     }
