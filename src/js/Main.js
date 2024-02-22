@@ -1,3 +1,4 @@
+import 'core-js/actual/set';
 import {useState} from 'react'
 import {ResetButtons} from './ResetButtons';
 import {Board} from "./Board";
@@ -5,10 +6,13 @@ import {Board} from "./Board";
 export function Main() {
     const [board_array, set_board_array] = useState(Array(81).fill(""))
     const [start_turn, set_start_turn] = useState(0)
+
     const turn_map = {"1": "✕", "-1": "〇", "0": ""}
     let current_turn = start_turn
+
     let set_disable_array = Array(81)
-    let disable_these_squares = []
+    let new_disabled_squares = new Set([])
+    let old_disabled_squares = new Set([])
 
     function Square({square_idx}) {
         const [state, updateState] = useState("")
@@ -16,14 +20,20 @@ export function Main() {
         set_disable_array[square_idx] = set_disable
 
         const disable_squares = () => {
-            disable_these_squares.forEach(e => set_disable_array[e](true))
+            new_disabled_squares.forEach(e => set_disable_array[e](true))
+            old_disabled_squares.difference(new_disabled_squares).forEach(e => set_disable_array[e](false))
+            old_disabled_squares = new_disabled_squares
         }
 
         const update_square = () => {
             board_array[square_idx] = current_turn
             updateState(turn_map[current_turn])
             current_turn = -current_turn
-            disable_these_squares = [0, 1, 2, 3, 4, 5, 6, 7, 8] // the idea is that update_square will call game logic which will return the indices of squares that needs to be disabled
+            if (new_disabled_squares.has(4)) {
+                new_disabled_squares = new Set([6, 7, 8, 9, 10, 11, 12, 13])
+            } else {
+                new_disabled_squares = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8])
+            }
             disable_squares()
         }
 
