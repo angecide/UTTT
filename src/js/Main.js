@@ -1,7 +1,8 @@
-import 'core-js/actual/set';
-import {useState} from 'react'
+import Set from 'core-js-pure/actual/set';
+import {useState} from 'react';
 import {ResetButtons} from './ResetButtons';
 import {Board} from "./Board";
+import {get_legal_moves} from "./GameLogic";
 
 export function Main() {
     const [board_array, set_board_array] = useState(Array(81).fill(""))
@@ -11,7 +12,7 @@ export function Main() {
     let current_turn = start_turn
 
     let set_disable_array = Array(81)
-    let new_disabled_squares = new Set([])
+    let disabled_squares = new Set([])
     let old_disabled_squares = new Set([])
 
     function Square({square_idx}) {
@@ -19,22 +20,21 @@ export function Main() {
         const [disable, set_disable] = useState(false)
         set_disable_array[square_idx] = set_disable
 
-        const disable_squares = () => {
+        const disable_squares = (new_disabled_squares) => {
             new_disabled_squares.forEach(e => set_disable_array[e](true))
-            old_disabled_squares.difference(new_disabled_squares).forEach(e => set_disable_array[e](false))
+            old_disabled_squares
+                .difference(disabled_squares)
+                .difference(new_disabled_squares)
+                .forEach(e => set_disable_array[e](false))
             old_disabled_squares = new_disabled_squares
         }
 
         const update_square = () => {
             board_array[square_idx] = current_turn
+            disabled_squares.add(square_idx)
             updateState(turn_map[current_turn])
             current_turn = -current_turn
-            if (new_disabled_squares.has(4)) {
-                new_disabled_squares = new Set([6, 7, 8, 9, 10, 11, 12, 13])
-            } else {
-                new_disabled_squares = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8])
-            }
-            disable_squares()
+            disable_squares(get_legal_moves(square_idx))
         }
 
         return <button className="square"
