@@ -3,8 +3,8 @@ import range from 'core-js-pure/full/iterator/range';
 
 const entire_board_indices = new Set(range(0, 81)) // used to quickly determine which squares to disable
 
-export function get_squares_to_enable_and_disable(move_played, disabled_squares) {
-    const start = 9 * (move_played % 9)
+export function evaluate_legal_moves(move_played, disabled_squares) {
+    const start = 9 * (move_played % 9) // start index of the corresponding TTT board based on move_played
 
     const legal_moves = new Set(range(start, start + 9))
         .difference(disabled_squares) // make sure we don't enable squares that have already been played on
