@@ -13,10 +13,14 @@ function evaluate_TTT_board(move_played, board_array) {
 }
 
 export function evaluate_legal_moves(move_played, disabled_squares) {
-    const start = 9 * (move_played % 9) // start index of the corresponding TTT board based on move_played
+    const start = 9 * (move_played % 9) // start index of the square to the TTT board consisting of legal moves
 
-    const legal_moves = new Set(range(start, start + 9)) // this range encompasses the indexes of the TTT board
+    const legal_moves = new Set(range(start, start + 9))
         .difference(disabled_squares) // make sure we don't enable squares that have already been played on
+
+    // if legal_moves contains move_played, we want to make sure move_played is not re-enabled
+    // this cannot be part of the above method chaining, since .delete returns a boolean value
+    legal_moves.delete(move_played)
 
     const squares_to_disable = entire_board_indices
         .difference(disabled_squares) // no need to try to disable squares that have already been disabled
