@@ -1,4 +1,3 @@
-import Set from 'core-js-pure/actual/set';
 import {useState} from 'react';
 import {ResetButtons} from './ResetButtons';
 import {Board} from "./Board";
@@ -15,7 +14,7 @@ export function Main() {
 
     function Square({square_idx}) {
         const [state, updateState] = useState("")
-        const [disable, setDisable] = useState(false) // TODO: disable all squares if start_turn === 0
+        const [disable, setDisable] = useState(start_turn === 0)
         setDisable_collection[square_idx] = setDisable
 
         const enable_and_disable_squares = () => {

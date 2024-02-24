@@ -18,8 +18,8 @@ export function evaluate_legal_moves(move_played, disabled_squares) {
     const legal_moves = new Set(range(start, start + 9))
         .difference(disabled_squares) // make sure we don't enable squares that have already been played on
 
-    // if legal_moves contains move_played, we want to make sure move_played is not re-enabled
-    // this cannot be part of the above method chaining, since .delete returns a boolean value
+    // if legal_moves contains move_played, we want to make sure that move_played still gets disabled
+    // this call cannot be part of the above method chaining, since .delete returns a boolean value
     legal_moves.delete(move_played)
 
     const squares_to_disable = entire_board_indices
