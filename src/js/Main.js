@@ -5,7 +5,6 @@ import {Board} from "./Board";
 import {evaluate_legal_moves} from "./GameLogic";
 
 export function Main() {
-    const [board_array, set_board_array] = useState(Array(81).fill(""))
     const [start_turn, set_start_turn] = useState(0)
 
     const turn_symbol_map = {"1": "✕", "-1": "〇", "0": ""}
@@ -26,7 +25,6 @@ export function Main() {
         }
 
         const update_square = () => {
-            board_array[square_idx] = current_turn
             updateState(turn_symbol_map[current_turn])
             current_turn = -current_turn
             enable_and_disable_squares()
@@ -41,7 +39,7 @@ export function Main() {
     }
 
     return <>
-        <ResetButtons set_board_array={set_board_array} set_turn={set_start_turn}/>
+        <ResetButtons set_turn={set_start_turn}/>
         <Board Square={Square}/>
     </>
 }
