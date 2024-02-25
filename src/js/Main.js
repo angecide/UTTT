@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {ResetButtons} from './ResetButtons';
 import {Board} from "./Board";
-import {evaluate_legal_moves} from "./GameLogic";
+import {evaluate_legal_moves, update_bit_array} from "./GameLogic";
 
 export function Main() {
     const [start_turn, set_start_turn] = useState(0)
@@ -11,6 +11,7 @@ export function Main() {
 
     let setDisable_collection = Array(81) // used to selectively enable or disable squares
     let occupied_squares = new Set([]) // collection of square_idx that have already been played
+    const player_bit_arrays = {"1": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "-1": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
 
     function Square({square_idx}) {
         const [state, updateState] = useState("")
@@ -26,8 +27,9 @@ export function Main() {
         const update_square = () => {
             updateState(turn_symbol_map[current_turn])
             current_turn = -current_turn
+            update_bit_array(current_turn, square_idx, player_bit_arrays)
             enable_and_disable_squares()
-            occupied_squares.add(square_idx) // doing this after the previous line ensures square_idx is disabled
+            occupied_squares.add(square_idx)
         }
 
         return <button className="square"

@@ -1,4 +1,4 @@
-export function ResetButtons({set_board_array, set_turn}) {
+export function ResetButtons({set_turn}) {
 
     function ResetButton({text, turn}) {
         const reset_and_set_turn = () => {
