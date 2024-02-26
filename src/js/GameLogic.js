@@ -4,12 +4,12 @@ import range from 'core-js-pure/full/iterator/range';
 const entire_board_indices = new Set(range(0, 81)) // used to quickly determine which squares to disable
 
 const draw = 511
-const winning_line = [292, 448, 273, 84, 73, 56, 7, 146]
+const winning_lines = [292, 448, 273, 84, 73, 56, 7, 146]
 const board_won = new Array(512).fill(false) // used to quickly determine if a board has been won
-for (const board of range(0, 512)) {
-    for (const line of winning_line) {
+for (const board of range(0, 512)) { // 0 to 511 are basically all the possible combinations of TTT boards
+    for (const line of winning_lines) {
         if ((board & line) === line) {
-            board_won[board] = true
+            board_won[board] = true // if any of those board configurations contains a winning line, we set it to true
         }
     }
 }
@@ -24,22 +24,19 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     // this block of code updates the player arrays based on the move that was played, and checks if game is over
     current_board[board] |= (1 << move) // update the board
     if (board_won[current_board[board]]) { // check if the board has been won
-        current_board[9] |= (1 << board) // update the big TTT board with this information
+        current_board[9] |= (1 << board) // update the big board with the information that this board has been won
         console.log(current_turn, "won on board", board, "by playing", move_played, "that player's bit array:", current_board)
         if (board_won[current_board[9]]) { // check if the big board has been won
             console.log(current_turn, "won the game by playing", move_played, "that player's bit array:", current_board)
         }
     } else if ((current_board[board] | other_board[board]) === draw) { // check if the board is drawn
-        player_bit_arrays[0] |= (1 << board) // update the draw tracker that this board has been drawn
+        player_bit_arrays[0] |= (1 << board) // update the draw board with the information that this board has been drawn
         console.log(current_turn, "draw on board", board, "by playing", move_played, "players bit arrays:", player_bit_arrays)
     }
-    if (((current_board[9] | other_board[9] | player_bit_arrays[0]) & draw) === draw)
+    if (((current_board[9] | other_board[9] | player_bit_arrays[0]) & draw) === draw) // check if the big board is drawn
     {
         console.log("the game ends in a draw")
     }
-
-    // this next block of code is figuring out the legal moves for the next player to play on
-    const squares_to_enable2 = new Set()
 
     const start = move * 9 // the starting index of the TTT board where the next player has to play based on move_played
 
