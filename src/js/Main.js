@@ -8,15 +8,15 @@ export function Main() {
 
     const turn_symbol_map = {"1": "✕", "-1": "〇", "0": ""}
 
-    const game_state = { // player_bit_arrays tracks the moves played on the board by each player using bit arrays
-        player_bit_arrays: {"1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "-1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+    const game_state = { // tracks the moves played on the board by each player using bit arrays, "0": 0 tracks draws
+        player_bit_arrays: {"1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "-1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "0": 0},
         current_turn: start_turn, // track whose turn it is
-        disabled_squares: new Set([]), // collection of square_idx that have already been played
+        disabled_squares: new Set([]), // collection of square_idx that have already been played on
         setDisables: new Array(81) // used to selectively enable or disable squares
     }
 
     function Square({square_idx}) {
-        const [state, updateState] = useState("")
+        const [state, updateState] = useState("") // "state" is what is drawn on this square
         const [disable, setDisable] = useState(start_turn === 0)
         game_state.setDisables[square_idx] = setDisable
 
