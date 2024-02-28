@@ -21,36 +21,39 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     const current_board = player_bit_arrays[current_turn] // the player who played "move_played"'s bit board
     const other_board = player_bit_arrays[-current_turn] // the other player's bit board
 
-    // this block of code updates the player arrays based on the move that was played, and checks if game is over
+    let squares_to_disable = new Set([move_played])
     current_board[board] |= (1 << move) // update the board
+
     if (board_won[current_board[board]]) { // check if the board has been won
         current_board[9] |= (1 << board) // update the big board with the information that this board has been won
         console.log(current_turn, "won on board", board, "by playing", move_played, "that player's bit array:", current_board)
+
+        squares_to_disable.add(new Set(range(move * 9, move * 9 + 9))) // all these squares needs to be disabled
+
         if (board_won[current_board[9]]) { // check if the big board has been won
             console.log(current_turn, "won the game by playing", move_played, "that player's bit array:", current_board)
         }
+
     } else if ((current_board[board] | other_board[board]) === filled) { // check if the board has been drawn
         player_bit_arrays[0] |= (1 << board) // update the draw board with the information that this board has been drawn
         console.log(current_turn, "draw on board", board, "by playing", move_played, "players bit arrays:", player_bit_arrays)
     }
 
-    const big_board = (current_board[9] | other_board[9] | player_bit_arrays[0])^filled // flip the zeros and ones
+    const big_board = (current_board[9] | other_board[9] | player_bit_arrays[0]) ^ filled // flip the zeros and ones
+
     if (big_board === 0) { // check if the big board has been drawn
 
         console.log("the game ends in a draw")
     }
 
-    const squares_to_enable = new Set([])
+    let squares_to_enable
     if (big_board & (1 << move)) {
-        const start = move * 9
-        squares_to_enable.union(new Set(range(start, start + 9)))
-        for (const item of squares_to_enable){console.log(item)}
+        squares_to_enable = new Set(range(move * 9, move * 9 + 9))
     } else {
-        squares_to_enable
-            .union(entire_board_indices)
+        squares_to_enable = entire_board_indices
     }
 
-    squares_to_enable
+    squares_to_enable = squares_to_enable
         .difference(disabled_squares)
         .difference(new Set([move_played]))
     squares_to_enable.forEach(e => setDisables[e](false))
