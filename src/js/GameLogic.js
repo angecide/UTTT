@@ -1,7 +1,7 @@
 ﻿import Set from 'core-js-pure/actual/set';
 import range from 'core-js-pure/full/iterator/range';
 
-const entire_board_indices = new Set(range(0, 81)) // used to quickly determine which squares to disable this iteration
+const entire_board_indices = new Set(range(0, 81)) // used to quickly determine which squares to disable each iteration
 
 const filled = 511 // bit board representation of every square in a 3x3 TTT board being occupied with a move
 const winning_lines = [292, 448, 273, 84, 73, 56, 7, 146]
@@ -9,7 +9,7 @@ const board_won = new Array(512).fill(false) // used to quickly determine if a b
 for (const board of range(0, 512)) { // 0 to 511 are basically all the possible combinations of TTT boards
     for (const line of winning_lines) {
         if ((board & line) === line) {
-            board_won[board] = true // if any of those board configurations contains a winning line, we set it to true
+            board_won[board] = true // if any of those board configurations contains a winning line, set it to true
         }
     }
 }
@@ -21,47 +21,46 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     const current_board = player_bit_arrays[current_turn] // the player who played "move_played"'s bit board
     const other_board = player_bit_arrays[-current_turn] // the other player's bit board
 
-    let squares_to_disable = new Set([move_played]) // additional squares that will be added to disabled_squares at the end
-    current_board[board] |= (1 << move) // update the board
+    let squares_to_disable = new Set([move_played]) // new set of squares that will be disabled for the rest of the game
 
-    if (board_won[current_board[board]]) { // check if the board has been won
+    current_board[board] |= (1 << move) // update the current_turn's board with the "move" that was played on "board"
+    if (board_won[current_board[board]]) { // check if the small board has been won
         current_board[9] |= (1 << board) // update the big board with the information that this board has been won
-        console.log(current_turn, "won on board", board, "by playing", move_played, "that player's bit array:", current_board)
-
-        squares_to_disable = squares_to_disable.union(new Set(range(board * 9, board * 9 + 9)))
+        squares_to_disable = squares_to_disable.union(new Set(range(board * 9, board * 9 + 9))) // disable this board
+        console.log(current_turn, "won on board", board, "by playing", move_played)
 
         if (board_won[current_board[9]]) { // check if the big board has been won
-            console.log(current_turn, "won the game by playing", move_played, "that player's bit array:", current_board)
             squares_to_disable = squares_to_disable.union(entire_board_indices) // game is over, disable all squares
+            console.log(current_turn, "won the game by playing", move_played)
         }
 
-    } else if ((current_board[board] | other_board[board]) === filled) { // check if the board has been drawn
+    } else if ((current_board[board] | other_board[board]) === filled) { // check if the small board has been drawn
         player_bit_arrays[0] |= (1 << board) // update the draw board with the information that this board has been drawn
-        console.log(current_turn, "draw on board", board, "by playing", move_played, "players bit arrays:", player_bit_arrays)
+        console.log(current_turn, "draw on board", board, "by playing", move_played)
     }
 
-    const big_board = (current_board[9] | other_board[9] | player_bit_arrays[0]) ^ filled // flip the zeros and ones
+    const big_board = (current_board[9] | other_board[9] | player_bit_arrays[0]) ^ filled // flipping the zeros and ones
 
     if (big_board === 0) { // check if the big board has been drawn
         squares_to_disable = squares_to_disable.union(entire_board_indices) // game is over, disable all squares
         console.log("the game ends in a draw")
     }
 
-    let squares_to_enable
-    if (big_board & (1 << move)) {
-        squares_to_enable = new Set(range(move * 9, move * 9 + 9))
+    let squares_to_enable // these are the squares that will be enabled for the next player to play on
+    if (big_board & (1 << move)) { // check if "move" sends the next player to a board that hasn't been won or drawn
+        squares_to_enable = new Set(range(move * 9, move * 9 + 9)) // if that's the case, then that board is enabled
     } else {
-        squares_to_enable = entire_board_indices
+        squares_to_enable = entire_board_indices // otherwise, the next player can choose all the other squares
     }
 
     squares_to_enable = squares_to_enable
-        .difference(disabled_squares)
-        .difference(squares_to_disable)
-    squares_to_enable.forEach(e => setDisables[e](false))
+        .difference(disabled_squares) // don't enable squares that are already played on or part of a finished board
+        .difference(squares_to_disable) // don't enable squares that are going to be disabled
+    squares_to_enable.forEach(e => setDisables[e](false)) // enable the remaining squares
 
-    entire_board_indices
-        .difference(squares_to_enable)
-        .difference(disabled_squares)
-        .forEach(e => setDisables[e](true))
-    squares_to_disable.forEach(e => disabled_squares.add(e))
+    entire_board_indices // the entire board is used as a basis for determining which squares needs to be disabled
+        .difference(squares_to_enable) // don't disable squares that have just been enabled
+        .difference(disabled_squares) // no need to re-run disable on squares that are already disabled
+        .forEach(e => setDisables[e](true)) // disable the remaining squares
+    squares_to_disable.forEach(e => disabled_squares.add(e)) // squares_to_disable are no longer going to be enabled
 }
