@@ -14,7 +14,7 @@ for (const board of range(0, 512)) { // 0 to 511 are basically all the possible 
     }
 }
 
-export function update_game_state({player_bit_arrays, move_played, current_turn, disabled_squares, setDisables}) {
+export function update_game_state({player_bit_arrays, move_played, current_turn, disabled_squares, set_disables}) {
     const board = Math.floor(move_played / 9) // current TTT board index of where "move_played" was played
     const move = move_played % 9 // the corresponding square_idx relative to the above TTT board
 
@@ -50,17 +50,17 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     if ((big_board & (1 << move)) === 0) { // check if "move" sends the next player to a board that hasn't been finished
         squares_to_enable = new Set(range(move * 9, move * 9 + 9)) // if that's the case, then that board is enabled
     } else {
-        squares_to_enable = entire_board_indices // otherwise, the next player can choose all the other squares
+        squares_to_enable = entire_board_indices // otherwise, the next player can choose any of the other valid squares
     }
 
     squares_to_enable = squares_to_enable
         .difference(disabled_squares) // don't enable squares that are already played on or part of a finished board
         .difference(squares_to_disable) // don't enable squares that are going to be disabled
-    squares_to_enable.forEach(e => setDisables[e](false)) // enable the remaining squares
+    squares_to_enable.forEach(e => set_disables[e](false)) // enable the remaining squares
 
     entire_board_indices // the entire board is used as a basis for determining which squares needs to be disabled
         .difference(squares_to_enable) // don't disable squares that have just been enabled
         .difference(disabled_squares) // no need to re-run disable on squares that are already disabled
-        .forEach(e => setDisables[e](true)) // disable the remaining squares
+        .forEach(e => set_disables[e](true)) // disable the remaining squares
     squares_to_disable.forEach(e => disabled_squares.add(e)) // squares_to_disable are no longer going to be enabled
 }
