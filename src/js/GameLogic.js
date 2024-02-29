@@ -28,7 +28,7 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
         current_board[9] |= (1 << board) // update the big board with the information that this board has been won
         console.log(current_turn, "won on board", board, "by playing", move_played, "that player's bit array:", current_board)
 
-        squares_to_disable = squares_to_disable.union(new Set(range(move * 9, move * 9 + 9)))
+        squares_to_disable = squares_to_disable.union(new Set(range(board * 9, board * 9 + 9)))
 
         if (board_won[current_board[9]]) { // check if the big board has been won
             console.log(current_turn, "won the game by playing", move_played, "that player's bit array:", current_board)
@@ -43,7 +43,7 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     const big_board = (current_board[9] | other_board[9] | player_bit_arrays[0]) ^ filled // flip the zeros and ones
 
     if (big_board === 0) { // check if the big board has been drawn
-
+        squares_to_disable = squares_to_disable.union(entire_board_indices) // game is over, disable all squares
         console.log("the game ends in a draw")
     }
 
@@ -63,5 +63,5 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
         .difference(squares_to_enable)
         .difference(disabled_squares)
         .forEach(e => setDisables[e](true))
-    squares_to_disable.forEach(e => setDisables.add(e))
+    squares_to_disable.forEach(e => disabled_squares.add(e))
 }
