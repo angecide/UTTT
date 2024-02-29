@@ -39,15 +39,15 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
         console.log(current_turn, "draw on board", board, "by playing", move_played)
     }
 
-    const big_board = (current_board[9] | other_board[9] | player_bit_arrays[0]) ^ filled // flipping the zeros and ones
+    const big_board = current_board[9] | other_board[9] | player_bit_arrays[0] // the current state of all the big boards
 
-    if (big_board === 0) { // check if the big board has been drawn
+    if (big_board === filled) { // check if the big board has been drawn
         squares_to_disable = squares_to_disable.union(entire_board_indices) // game is over, disable all squares
         console.log("the game ends in a draw")
     }
 
     let squares_to_enable // these are the squares that will be enabled for the next player to play on
-    if (big_board & (1 << move)) { // check if "move" sends the next player to a board that hasn't been won or drawn
+    if ((big_board & (1 << move)) === 0) { // check if "move" sends the next player to a board that hasn't been finished
         squares_to_enable = new Set(range(move * 9, move * 9 + 9)) // if that's the case, then that board is enabled
     } else {
         squares_to_enable = entire_board_indices // otherwise, the next player can choose all the other squares
