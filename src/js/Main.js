@@ -24,7 +24,6 @@ export function Main() {
             updateState(turn_symbol_map[game_state.current_turn])
             game_state.move_played = square_idx
             update_game_state(game_state)
-            game_state.disabled_squares.add(square_idx)
             game_state.current_turn = -game_state.current_turn
         }
 
