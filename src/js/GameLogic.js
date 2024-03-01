@@ -1,4 +1,4 @@
-﻿import Set from 'core-js-pure/actual/set';
+import Set from 'core-js-pure/actual/set';
 import range from 'core-js-pure/full/iterator/range';
 
 const entire_board_indices = new Set(range(0, 81)) // used to quickly determine which squares to disable each iteration
