@@ -1,10 +1,7 @@
 import Set from 'core-js-pure/actual/set';
 import range from 'core-js-pure/full/iterator/range';
 
-let disabled_squares = new Set() // squares that were previously disabled
-let enabled_squares = new Set() // squares that were previously enabled
 const entire_board_indices = new Set(range(0, 81)) // used to quickly determine which squares to disable each iteration
-
 const filled = 511 // bit board representation of every square in a 3x3 TTT board being occupied with a move
 const winning_lines = [292, 448, 273, 84, 73, 56, 7, 146]
 const board_won = new Array(512).fill(false) // used to quickly determine if a board has been won
@@ -16,7 +13,7 @@ for (const board of range(0, 512)) { // 0 to 511 are basically all the possible 
     }
 }
 
-export function update_game_state({player_bit_arrays, move_played, current_turn, finished_squares, set_disables}) {
+export function update_game_state({player_bit_arrays, move_played, current_turn, finished_squares, previously_disabled_squares, previously_enabled_squares, set_disables}) {
     const board = Math.floor(move_played / 9) // current TTT board index of where "move_played" was played
     const move = move_played % 9 // the corresponding square_idx relative to the above TTT board
 
@@ -65,23 +62,53 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
         the squares_to_disable is more fine tuned to the game rules, whereas squares_to_enable is defined with the intention of squares_to_disable being subtracted from it
         so squares_to_enable = squares_to_enable - squares_to_disable - finished_squares, and stuff_to_disable = entire_board_indices - finished_squares - squares_to_enable
         => stuff_to_disable = entire_board_indices - finished_squares - (squares_to_enable - squares_to_disable - finished_squares)
-                            = entire_board_indices - finished_squares - squares_to_enable + squares_to_disable + finished_squares (not entirely sure this is how it works)
+                            = entire_board_indices - finished_squares - squares_to_enable + squares_to_disable + finished_squares
+                            = entire_board_indices - squares_to_enable + squares_to_disable
 
-    tangent thought: Why am I subtracting with both squares_to_disable and finished_squares, shouldn't finished_squares already be part of finished_squares?
+    tangent thought: Why am I subtracting with both squares_to_disable and finished_squares, shouldn't squares_to_disable already be part of finished_squares?
         no, squares_to_disable is always being re-defined at the start of this function
         squares_to_disable is the new squares that are disabled for the rest of the game, and finished_squares is a collection of all the previous squares_to_disable
 
-    basically, if I don't update squares_to_enable, then it also includes stuff from squares_to_disable - finished_squares
+    basically, if I don't update squares_to_enable, then it also includes stuff from squares_to_disable and finished_squares
+    if squares_to_enable contains some of finished_squares, then we can still do .difference(squares_to_enable) and .difference(finished_squares) and be good to go
 
+    The point of square_to_enable in entire_board_indices.difference is basically to ensure that we don't disable things that have just been enabled
+    the issue with .difference(square_to_enable) without updating square_to_enable is that it might basically contain squares from squares_to_disable
+    so it has to be like the equations I made above, entire_board_indices.difference(square_to_enable).add(squares_to_disable)
+
+    the issue with this is that it contains all the squares that needs to be disabled, but doesn't take into account the squares that are already disabled
+    thus we run into the issue which is the entire point of why we are even here, how do I incorporate squares that are already disabled
+    nether squares_to_enable nor squares_to_disable uses finished_squares to determine their set, so I can also do .difference(finished_squares) on entire_board_indices
+    at the start of the game, this only contributes very little to entire_board_indices, and thus most of the already disabled squares will get re-run again
+    solution is to track disabled_squares, but how should it be updated?
+
+    previously_disabled_squares = entire_board_indices.difference(square_to_enable).add(squares_to_disable)    defined at the end after below
+    previously_enabled_squares = squares_to_enable.difference(finished_squares)    defined at the end after finished_squares have been updated
     */
+
     squares_to_enable
+        .difference(previously_enabled_squares)
         .difference(finished_squares) // don't enable squares that are already played on or part of a finished board
         .difference(squares_to_disable) // don't enable squares that are going to be disabled
         .forEach(e => set_disables[e](false)) // enable the remaining squares
 
     entire_board_indices // the entire board is used as a basis for determining which squares needs to be disabled
+        .difference(previously_disabled_squares)
         .difference(squares_to_enable) // don't disable squares that have just been enabled
         .difference(finished_squares) // no need to re-run disable on squares that are already disabled
+        .union(squares_to_disable)
         .forEach(e => set_disables[e](true)) // disable the remaining squares
+
     squares_to_disable.forEach(e => finished_squares.add(e)) // squares_to_disable are no longer going to be enabled
+
+    previously_enabled_squares.clear()
+    squares_to_enable
+        .difference(finished_squares)
+        .forEach(e => previously_enabled_squares.add(e))
+
+    previously_disabled_squares.clear()
+    entire_board_indices
+        .difference(squares_to_enable)
+        .add(squares_to_disable)
+        .forEach(e => previously_disabled_squares.add(e))
 }
