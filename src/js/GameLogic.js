@@ -1,6 +1,8 @@
 import Set from 'core-js-pure/actual/set';
 import range from 'core-js-pure/full/iterator/range';
 
+let disabled_squares = new Set() // squares that were previously disabled
+let enabled_squares = new Set() // squares that were previously enabled
 const entire_board_indices = new Set(range(0, 81)) // used to quickly determine which squares to disable each iteration
 
 const filled = 511 // bit board representation of every square in a 3x3 TTT board being occupied with a move
@@ -14,7 +16,7 @@ for (const board of range(0, 512)) { // 0 to 511 are basically all the possible 
     }
 }
 
-export function update_game_state({player_bit_arrays, move_played, current_turn, disabled_squares, set_disables}) {
+export function update_game_state({player_bit_arrays, move_played, current_turn, finished_squares, set_disables}) {
     const board = Math.floor(move_played / 9) // current TTT board index of where "move_played" was played
     const move = move_played % 9 // the corresponding square_idx relative to the above TTT board
 
@@ -53,14 +55,33 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
         squares_to_enable = entire_board_indices // otherwise, the next player can choose any of the other valid squares
     }
 
-    squares_to_enable = squares_to_enable
-        .difference(disabled_squares) // don't enable squares that are already played on or part of a finished board
+    /*
+    How can I update enabled_squares ...
+    The chain calls below, which updates squares_to_enable, shouldn't really need to update squares_to_enable
+    the reason for this is that the main purpose of these chain calls is to optimize the final forEach loop
+    and the reason why I decided to re-define squares_to_enable was because it was needed in the deciding which squares to disable
+    but why not just use the entire squares_to_enable for this? It's set operation anyway, who cares about running some .difference on a bigger set
+    the reason for not using squares_to_enable, is because there is a possibility that it contains something that's part of squares_to_disable? what has priority?
+        the squares_to_disable is more fine tuned to the game rules, whereas squares_to_enable is defined with the intention of squares_to_disable being subtracted from it
+        so squares_to_enable = squares_to_enable - squares_to_disable - finished_squares, and stuff_to_disable = entire_board_indices - finished_squares - squares_to_enable
+        => stuff_to_disable = entire_board_indices - finished_squares - (squares_to_enable - squares_to_disable - finished_squares)
+                            = entire_board_indices - finished_squares - squares_to_enable + squares_to_disable + finished_squares (not entirely sure this is how it works)
+
+    tangent thought: Why am I subtracting with both squares_to_disable and finished_squares, shouldn't finished_squares already be part of finished_squares?
+        no, squares_to_disable is always being re-defined at the start of this function
+        squares_to_disable is the new squares that are disabled for the rest of the game, and finished_squares is a collection of all the previous squares_to_disable
+
+    basically, if I don't update squares_to_enable, then it also includes stuff from squares_to_disable - finished_squares
+
+    */
+    squares_to_enable
+        .difference(finished_squares) // don't enable squares that are already played on or part of a finished board
         .difference(squares_to_disable) // don't enable squares that are going to be disabled
-    squares_to_enable.forEach(e => set_disables[e](false)) // enable the remaining squares
+        .forEach(e => set_disables[e](false)) // enable the remaining squares
 
     entire_board_indices // the entire board is used as a basis for determining which squares needs to be disabled
         .difference(squares_to_enable) // don't disable squares that have just been enabled
-        .difference(disabled_squares) // no need to re-run disable on squares that are already disabled
+        .difference(finished_squares) // no need to re-run disable on squares that are already disabled
         .forEach(e => set_disables[e](true)) // disable the remaining squares
-    squares_to_disable.forEach(e => disabled_squares.add(e)) // squares_to_disable are no longer going to be enabled
+    squares_to_disable.forEach(e => finished_squares.add(e)) // squares_to_disable are no longer going to be enabled
 }
