@@ -13,9 +13,6 @@ export function Main() {
     const game_state = { // tracks the moves played on the board by each player using bit arrays, "0": 0 tracks draws
         player_bit_arrays: {"1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "-1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "0": 0},
         current_turn: start_turn, // track whose turn it is
-        finished_squares: new Set(), // collection of square_idx that will be disabled for the rest of the game
-        previously_disabled_squares: new Set(),
-        previously_enabled_squares: new Set(range(0, 81)),
         set_disables: new Array(81) // used to selectively enable or disable squares
     }
 
