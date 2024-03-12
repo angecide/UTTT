@@ -2,7 +2,6 @@ import {useRef, useState} from 'react';
 import {ResetButtons} from './ResetButtons';
 import {Board} from "./Board";
 import {update_game_state} from "./GameLogic";
-import Set from "core-js-pure/actual/set";
 import range from 'core-js-pure/full/iterator/range';
 
 export function Main() {
@@ -12,8 +11,10 @@ export function Main() {
 
     const game_state = { // tracks the moves played on the board by each player using bit arrays, "0": 0 tracks draws
         player_bit_arrays: {"1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "-1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "0": 0},
+        game_board: new Set(range(0, 81)),
         current_turn: start_turn, // track whose turn it is
-        set_disables: new Array(81) // used to selectively enable or disable squares
+        set_disables: new Array(81),
+        cache: {previously_enabled_squares: new Set(), previously_disabled_squares: new Set()}
     }
 
     function Square({square_idx}) {
