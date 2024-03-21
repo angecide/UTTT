@@ -27,10 +27,15 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
         current_board[9] |= (1 << board) // update the big board with the information that this board has been won
         console.log(current_turn, "won on board", board, "by playing", move_played)
 
+        range(board * 9, board * 9 + 9).forEach(e => {
+            squares_to_disable.add(e)
+            game_board.delete(e)
+        })
 
         if (board_won[current_board[9]]) { // check if the big board has been won
             console.log(current_turn, "won the game by playing", move_played)
 
+            squares_to_disable = squares_to_disable.union(game_board)
         }
 
     } else if ((current_board[board] | other_board[board]) === filled) { // check if the small board has been drawn
@@ -42,14 +47,16 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     const big_board = current_board[9] | other_board[9] | player_bit_arrays[0] // the current state of all the big boards
 
     if (big_board === filled) { // check if the big board has been drawn
-
         console.log("the game ends in a draw")
+
+        squares_to_disable = squares_to_disable.union(game_board)
     }
 
+    let squares_to_enable // these are the squares that will be enabled for the next player to play on
     if ((big_board & (1 << move)) === 0) { // check if "move" sends the next player to a board that hasn't been finished
-
+        squares_to_enable = new Set(range(move * 9, move * 9 + 9))
     } else {
-
+        squares_to_enable = game_board
     }
 
 }
