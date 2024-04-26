@@ -4,10 +4,10 @@ import {Board} from "./Board";
 import {update_game_state} from "./GameLogic";
 import range from 'core-js-pure/full/iterator/range';
 
+const turn_symbol_map = {"1": "✕", "-1": "〇", "0": ""}
+
 export function Main() {
     const [start_turn, set_start_turn] = useState(0)
-
-    const turn_symbol_map = {"1": "✕", "-1": "〇", "0": ""}
 
     const game_state = { // tracks the moves played on the board by each player using bit arrays, "0": 0 tracks draws
         player_bit_arrays: {"1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "-1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "0": 0},
@@ -21,7 +21,6 @@ export function Main() {
         const [disable, set_disable] = useState(start_turn === 0)
         game_state.set_disables[square_idx] = set_disable
         const square_text = useRef("")
-        console.log(square_idx)
 
         const update_square = () => {
             square_text.symbol = turn_symbol_map[game_state.current_turn]

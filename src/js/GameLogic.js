@@ -1,6 +1,7 @@
 import Set from 'core-js-pure/actual/set';
 import range from 'core-js-pure/full/iterator/range';
 
+const entire_board_indices = new Set(range(0, 81)) // used to quickly determine which squares to disable each iteration
 const filled = 511 // bit board representation of every square in a 3x3 TTT board being occupied with a move
 const winning_lines = [292, 448, 273, 84, 73, 56, 7, 146]
 const board_won = new Array(512).fill(false) // used to quickly determine if a board has been won
@@ -49,8 +50,8 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
         squares_to_enable = game_board // otherwise, the next player can choose any of the other valid squares
     }
 
-    game_board // disable squares that needs to be disabled
-        .difference(squares_to_enable)
+    entire_board_indices
+        .difference(squares_to_enable) // disable squares that needs to be disabled
         .difference(cache.previously_disabled_squares)
         .forEach(e => set_disables[e](true))
 
@@ -58,6 +59,6 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
         .difference(cache.previously_enabled_squares)
         .forEach(e => set_disables[e](false))
 
-    cache.previously_disabled_squares = game_board.difference(squares_to_enable)
+    cache.previously_disabled_squares = entire_board_indices.difference(squares_to_enable)
     cache.previously_enabled_squares = squares_to_enable
 }
