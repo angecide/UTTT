@@ -1,12 +1,9 @@
 export function ResetButtons({set_turn}) {
 
     function ResetButton({text, turn}) {
-        const reset_and_set_turn = () => {
-            set_turn(turn)
-        }
         return <button className="reset"
                        value={text}
-                       onClick={reset_and_set_turn}>
+                       onClick={() => set_turn(turn)}>
             {text}
         </button>
     }
