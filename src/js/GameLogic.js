@@ -38,7 +38,7 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     }
 
     const big_board = current_board[9] | other_board[9] | player_bit_arrays[0] // current state of all the big boards
-    if (big_board === filled) { // check if the big board has been drawn
+    if (big_board === filled && !board_won[current_board[9]]) { // check if the big board has been drawn
         console.log("the game ends in a draw")
     }
 
@@ -55,7 +55,7 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
         .difference(cache.previously_disabled_squares)
         .forEach(e => set_disables[e](true))
 
-    squares_to_enable // enable squares that needs to be disabled
+    squares_to_enable // enable squares that needs to be enabled
         .difference(cache.previously_enabled_squares)
         .forEach(e => set_disables[e](false))
 
