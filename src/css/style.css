@@ -49,15 +49,15 @@ button.reset {
     padding: 0 20px;
 }
 
-button.reset[value="✕"]:hover {
+button.square[value="1 won"], button.reset[value="✕"]:hover {
     background-color: rgb(140, 45, 35);
 }
 
-button.reset[value="〇"]:hover {
+button.square[value="-1 won"], button.reset[value="〇"]:hover {
     background-color: rgb(10, 70, 60);
 }
 
-button.reset[value="reset"]:hover {
+button.square[value="0 won"], button.reset[value="reset"]:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 

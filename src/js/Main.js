@@ -13,13 +13,14 @@ export function Main() {
         player_bit_arrays: {"1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "-1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "0": 0},
         game_board: new Set(range(0, 81)), // used to quickly determine which squares to enable next turn
         current_turn: start_turn, // track whose turn it is
-        set_disables: new Array(81),
+        square_states: new Array(81), // array consisting of each square's set_disable and set_winner function
         cache: {previously_enabled_squares: new Set(), previously_disabled_squares: new Set()}
     }
 
     function Square({square_idx}) {
         const [disable, set_disable] = useState(start_turn === 0)
-        game_state.set_disables[square_idx] = set_disable
+        const [winner, set_winner] = useState("")
+        game_state.square_states[square_idx] = {set_disable, set_winner}
         const square_text = useRef("")
 
         function update_square() {
@@ -31,7 +32,8 @@ export function Main() {
 
         return <button className="square"
                        onClick={update_square}
-                       disabled={disable}>
+                       disabled={disable}
+                       value={winner}>
             {square_text.symbol}
         </button>
     }

@@ -13,7 +13,7 @@ for (const board of range(0, 512)) { // 0 to 511 are basically all the possible 
     }
 }
 
-export function update_game_state({player_bit_arrays, move_played, current_turn, game_board, cache, set_disables}) {
+export function update_game_state({player_bit_arrays, move_played, current_turn, game_board, cache, square_states}) {
     const board = Math.floor(move_played / 9) // current TTT board index of where "move_played" was played
     const move = move_played % 9 // the corresponding square_idx relative to the above TTT board
     const current_board = player_bit_arrays[current_turn] // the player who played "move_played"'s bitboard
@@ -25,7 +25,10 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     if (board_won[current_board[board]]) { // check if the small board has been won
         current_board[9] |= (1 << board) // update the big board with the information that this board has been won
         console.log(current_turn, "won on board", board, "by playing", move_played)
-        range(board * 9, board * 9 + 9).forEach(e => game_board.delete(e)) // disables this board for the rest of the game
+        range(board * 9, board * 9 + 9).forEach(e => {
+            game_board.delete(e) // disables this board for the rest of the game
+            square_states[e].set_winner(`${current_turn} won`) // mark current_turn as the winner of this board
+        })
 
         if (board_won[current_board[9]]) { // check if the big board has been won
             console.log(current_turn, "won the game by playing", move_played)
@@ -35,6 +38,7 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     } else if ((current_board[board] | other_board[board]) === filled) { // check if the small board has been drawn
         player_bit_arrays[0] |= (1 << board) // update the draw board with the information that this board has been drawn
         console.log(current_turn, "draw on board", board, "by playing", move_played)
+        range(board * 9, board * 9 + 9).forEach(e => square_states[e].set_winner("0 won")) // mark this board as drawn
     }
 
     const big_board = current_board[9] | other_board[9] | player_bit_arrays[0] // current state of all the big boards
@@ -45,7 +49,7 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     let squares_to_enable // these are the squares that will be enabled for the next player to play on
     if ((big_board & (1 << move)) === 0) { // check if "move" sends the next player to a board that hasn't been finished
         squares_to_enable = new Set(range(move * 9, move * 9 + 9)) // if that's the case, then that board is enabled
-            .intersection(game_board) // this ensures that we don't include squares that are disabled or going to be disabled
+            .intersection(game_board) // this ensures that we don't enable squares that are disabled or going to be disabled
     } else {
         squares_to_enable = game_board // else, the next player can choose any unoccupied squares on any unfinished boards
     }
@@ -53,11 +57,11 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
     entire_board_indices // disable squares that needs to be disabled
         .difference(squares_to_enable) // ensures that we don't disable squares that are going to be enabled
         .difference(cache.previously_disabled_squares) // no need to disable squares that have already been disabled
-        .forEach(e => set_disables[e](true))
+        .forEach(e => square_states[e].set_disable(true))
 
     squares_to_enable // enable squares that needs to be enabled
         .difference(cache.previously_enabled_squares) // no need to enable squares that have already been enabled
-        .forEach(e => set_disables[e](false))
+        .forEach(e => square_states[e].set_disable(false))
 
     cache.previously_disabled_squares = entire_board_indices.difference(squares_to_enable)
     cache.previously_enabled_squares = squares_to_enable
