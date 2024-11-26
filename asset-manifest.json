@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/UTTT/static/css/main.59718334.css",
-    "main.js": "/UTTT/static/js/main.0b34045d.js",
+    "main.css": "/UTTT/static/css/main.910a9004.css",
+    "main.js": "/UTTT/static/js/main.c3ed9987.js",
     "index.html": "/UTTT/index.html",
-    "main.59718334.css.map": "/UTTT/static/css/main.59718334.css.map",
-    "main.0b34045d.js.map": "/UTTT/static/js/main.0b34045d.js.map"
+    "main.910a9004.css.map": "/UTTT/static/css/main.910a9004.css.map",
+    "main.c3ed9987.js.map": "/UTTT/static/js/main.c3ed9987.js.map"
   },
   "entrypoints": [
-    "static/css/main.59718334.css",
-    "static/js/main.0b34045d.js"
+    "static/css/main.910a9004.css",
+    "static/js/main.c3ed9987.js"
   ]
 }
