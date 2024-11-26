@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {ResetButtons} from './ResetButtons';
 import {Board} from "./Board";
 import {update_game_state} from "./GameLogic";
@@ -16,6 +16,10 @@ export function Main() {
         square_states: new Array(81), // array consisting of each square's set_disable and set_winner function
         cache: {previously_enabled_squares: new Set(), previously_disabled_squares: new Set()}
     }
+
+    useEffect(() => { // a callback that calls set_status whenever the variable start_turn has been changed
+        start_turn === 0 ? game_state.set_status("pick a side") : game_state.set_status("play the game")
+    }, [start_turn])
 
     function Square({square_idx}) {
         const [disable, set_disable] = useState(start_turn === 0)
@@ -38,8 +42,18 @@ export function Main() {
         </button>
     }
 
+    function Status() {
+        const [status, set_status] = useState("")
+        game_state.set_status = set_status
+
+        return <div className="status">
+            {status}
+        </div>
+    }
+
     return <>
         <ResetButtons set_turn={set_start_turn}/>
         <Board Square={Square}/>
+        <Status/>
     </>
 }

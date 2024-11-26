@@ -13,7 +13,7 @@ for (const board of range(0, 512)) { // 0 to 511 are basically all the possible 
     }
 }
 
-export function update_game_state({player_bit_arrays, move_played, current_turn, game_board, cache, square_states}) {
+export function update_game_state({player_bit_arrays, move_played, current_turn, game_board, cache, square_states, set_status}) {
     const board = Math.floor(move_played / 9) // current TTT board index of where "move_played" was played
     const move = move_played % 9 // the corresponding square_idx relative to the above TTT board
     const current_board = player_bit_arrays[current_turn] // the player who played "move_played"'s bitboard
@@ -43,6 +43,7 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
 
     const big_board = current_board[9] | other_board[9] | player_bit_arrays[0] // current state of all the big boards
     if (big_board === filled && !board_won[current_board[9]]) { // check if the big board has been drawn
+        // TODO: the game is only drawn if both players won an equal number of small boards, otherwise there is still winner
         console.log("the game ends in a draw")
     }
 
@@ -65,4 +66,8 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
 
     cache.previously_disabled_squares = entire_board_indices.difference(squares_to_enable)
     cache.previously_enabled_squares = squares_to_enable
+
+    if (game_board.size === 0) {
+        current_turn === 1 ? set_status("✕ won the game") : set_status("〇 won the game") // doesn't handle draw cases
+    }
 }

@@ -19,6 +19,13 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.20);
 }
 
+.status {
+    letter-spacing: 10px;
+    font-size: 50px;
+    font-weight: 100;
+    padding: 1% 0 0 0;
+}
+
 .reset-buttons {
     display: flex;
     margin: 1% 0 1% 0;
