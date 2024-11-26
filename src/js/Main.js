@@ -19,7 +19,7 @@ export function Main() {
 
     useEffect(() => { // a callback that calls set_status whenever the variable start_turn has been changed
         start_turn === 0 ? game_state.set_status("pick a side") : game_state.set_status("play the game")
-    }, [start_turn])
+    })
 
     function Square({square_idx}) {
         const [disable, set_disable] = useState(start_turn === 0)
