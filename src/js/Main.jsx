@@ -1,11 +1,11 @@
 import {useRef, useState} from 'react';
 import range from 'core-js-pure/full/iterator/range';
 
-import {Board} from "./Board";
-import {ResetButtons} from './ResetButtons';
+import Board from "./Board";
+import ResetButtons from './ResetButtons';
 import {update_game_state, turn_symbol_map} from "./GameLogic";
 
-export function Main() {
+function Main() {
     const [start_turn, set_start_turn] = useState(0)
 
     const game_state = {
@@ -53,3 +53,5 @@ export function Main() {
         <Status/>
     </>
 }
+
+export default Main

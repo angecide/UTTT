@@ -51,7 +51,7 @@ export function update_game_state({player_bit_arrays, move_played, current_turn,
 
     const big_board = current_board[9] | other_board[9] | player_bit_arrays[0] // current state of all the big boards
     if (big_board === filled && !board_won[current_board[9]]) { // check if the big board has been drawn
-        // the player who wins the most small boards wins the game, and if both players win the same amount, it's a tie
+        // the player who wins the most small boards wins the game, otherwise if both players win the same amount it's a tie
         if (bitcount(current_board[9]) === bitcount(other_board[9])) {
             set_status("The game ends in a draw")
         } else if (bitcount(current_board[9]) > bitcount(other_board[9])) {

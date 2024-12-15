@@ -1,4 +1,4 @@
-export function ResetButtons({set_turn}) {
+function ResetButtons({set_turn}) {
 
     function ResetButton({text, turn}) {
         return <button className="reset"
@@ -14,3 +14,5 @@ export function ResetButtons({set_turn}) {
         <ResetButton text={"reset"} turn={0}/>
     </div>
 }
+
+export default ResetButtons

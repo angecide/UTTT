@@ -1,4 +1,4 @@
-export function Board({Square}) {
+function Board({Square}) {
 
     function MiniRow({mini_row_idx}) {
         return <div className={"mini-row"}>
@@ -30,3 +30,5 @@ export function Board({Square}) {
         <Row name={"lower-row"} row_idx={54}/>
     </>
 }
+
+export default Board
